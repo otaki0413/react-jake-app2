@@ -1,10 +1,21 @@
-import { FC, memo } from "react";
+import { FC, memo, useCallback } from "react";
 import { Box, Flex, Heading, Link, useDisclosure } from "@chakra-ui/react";
 import { MenuIconButton } from "../../atoms/button/MenuIconButton";
 import { MenuDrawer } from "../../molecules/MenuDrawer";
+import { useNavigate } from "react-router-dom";
 
 export const Header: FC = memo(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // 画面遷移で使用する関数
+  const navigation = useNavigate();
+  const onClickHome = useCallback(() => navigation("/home"), []);
+  const onClickUserManagement = useCallback(
+    () => navigation("/home/user_management"),
+    []
+  );
+  const onClickSetting = useCallback(() => navigation("/home/setting"), []);
+
   return (
     <div>
       <Flex
@@ -20,6 +31,7 @@ export const Header: FC = memo(() => {
           as="a"
           mr={8}
           _hover={{ cursor: "pointer" }}
+          onClick={onClickHome}
         >
           <Heading
             as="h1"
@@ -35,15 +47,18 @@ export const Header: FC = memo(() => {
           display={{ base: "none", md: "flex" }}
         >
           <Box pr={4}>
-            <Link>ユーザー一覧</Link>
+            <Link onClick={onClickUserManagement}>ユーザー一覧</Link>
           </Box>
-          <Link>設定について</Link>
+          <Link onClick={onClickSetting}>設定について</Link>
         </Flex>
         <MenuIconButton onOpen={onOpen} />
       </Flex>
       <MenuDrawer
         onClose={onClose}
         isOpen={isOpen}
+        onClickHome={onClickHome}
+        onClickUserManagement={onClickUserManagement}
+        onClickSetting={onClickSetting}
       />
     </div>
   );
