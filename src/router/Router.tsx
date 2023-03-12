@@ -17,7 +17,11 @@ export const Router: FC = () => {
       {/* ネストされたルート */}
       <Route
         path="/home"
-        element={<Home />}
+        element={
+          <HeaderLayout>
+            <Home />
+          </HeaderLayout>
+        }
       />
       <Route
         path="/home/user_management"
