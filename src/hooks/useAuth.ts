@@ -1,3 +1,4 @@
+import { useMessage } from "./useMessage";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useState } from "react";
 import axios from "axios";
@@ -6,6 +7,8 @@ import { User } from "../types/api/user";
 // ログイン認証のカスタムフック
 export const useAuth = () => {
   const navigation = useNavigate();
+  // ログイン認証時のメッセージ用のカスタムフックを実行
+  const { showMessage } = useMessage();
   // ローディング用のstate
   const [loading, setLoading] = useState(false);
   const login = useCallback(
@@ -14,15 +17,18 @@ export const useAuth = () => {
         .get<User>(`https://jsonplaceholder.typicode.com/users/${id}`)
         .then((res) => {
           if (res.data) {
+            showMessage({ title: "ログインしました", status: "success" });
             navigation("/home");
           } else {
-            alert("ユーザーが存在しません。");
+            showMessage({ title: "ユーザーが見つかりません", status: "error" });
           }
         })
-        .catch(() => alert("ログインできません"))
+        .catch(() =>
+          showMessage({ title: "ログインできません", status: "error" })
+        )
         .finally(() => setLoading(false));
     },
-    [navigation]
+    [navigation, showMessage]
   );
   return { login, loading };
 };
