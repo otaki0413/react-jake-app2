@@ -1,16 +1,21 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Heading,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
-import { FC, memo } from "react";
-  import { PrimaryButton } from "../atoms/button/PrimaryButton";
+import { Box, Divider, Flex, Heading, Input, Stack } from "@chakra-ui/react";
+import { ChangeEvent, FC, memo, useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
+import { PrimaryButton } from "../atoms/button/PrimaryButton";
 
 export const Login: FC = memo(() => {
+  // ログイン機能で使用するカスタムフックを実行
+  const { login, loading } = useAuth();
+  // ユーザーID用のstate
+  const [userId, setUserId] = useState("");
+
+  // userIDの更新処理
+  // textboxのイベントの型指定はよく出てくる
+  const onChangeUserId = (e: ChangeEvent<HTMLInputElement>) =>
+    setUserId(e.target.value);
+
+  // ログインボタン押下時の処理
+  const onClickLogin = () => login(userId);
   return (
     <Flex
       align="center"
@@ -37,8 +42,18 @@ export const Login: FC = memo(() => {
           px={10}
           py={4}
         >
-          <Input placeholder="ユーザーID" />
-          <PrimaryButton>ログイン</PrimaryButton>
+          <Input
+            placeholder="ユーザーID"
+            value={userId}
+            onChange={onChangeUserId}
+          />
+          <PrimaryButton
+            disabled={userId === ""}
+            loading={loading}
+            onClick={onClickLogin}
+          >
+            ログイン
+          </PrimaryButton>
         </Stack>
       </Box>
     </Flex>
