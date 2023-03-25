@@ -14,7 +14,13 @@ export const useAllUsers = () => {
   const getUsers = useCallback(() => {
     axios
       .get<Array<User>>("https://jsonplaceholder.typicode.com/users")
-      .then((res) => setUsers(res.data))
+      .then((res) => {
+        setUsers(res.data);
+        showMessage({
+          title: "ユーザー取得に成功しました。",
+          status: "success",
+        });
+      })
       .catch(() => {
         showMessage({
           title: "ユーザー取得に失敗しました。",
