@@ -7,6 +7,7 @@ import {
 } from "@chakra-ui/react";
 import { FC, memo, useCallback, useEffect } from "react";
 import { useAllUsers } from "../../hooks/useAllUsers";
+import { useSelectUser } from "../../hooks/useSelectUser";
 import { UserCard } from "../organisms/user/UserCard";
 import { UserDetailModal } from "../organisms/user/UserDetailModal";
 
@@ -15,12 +16,24 @@ export const UserManagement: FC = memo(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   // 全てのユーザーを取得する用のカスタムフックを実行
   const { getUsers, loading, users } = useAllUsers();
+  // 選択ユーザーと一致するユーザを取得する用のカスタムフックを実行
+  const { onSelectUser, selectedUser } = useSelectUser();
 
   // 初回マウント時に getUsers を実行する
   useEffect(() => getUsers, []);
 
   // ユーザー選択時にモーダルを表示する関数
-  const onClickUser = useCallback(() => onOpen(), []);
+  const onClickUser = useCallback(
+    (id: number) => {
+      onSelectUser({ id, users, onOpen });
+    },
+    /**
+     * 第２引数では変化可能性のある変数や関数をセットする
+     * usersの初期値は[] → usersを第２引数に設定した場合は、一覧取得時にusersが最新化
+     * 仮に空配列だと「関数を最初に作成した時点の内容を保持する」ためusersはnullとなる
+     */
+    [users, onSelectUser, onOpen]
+  );
 
   return (
     <>
@@ -36,10 +49,11 @@ export const UserManagement: FC = memo(() => {
           {users.map((user) => (
             <WrapItem key={user.id}>
               <UserCard
+                id={user.id}
                 imageUrl="https://source.unsplash.com/random"
                 userName={user.username}
                 fullName={user.name}
-                onClick={onClickUser}
+                onClick={() => onClickUser(user.id)}
               />
             </WrapItem>
           ))}
@@ -47,6 +61,7 @@ export const UserManagement: FC = memo(() => {
       )}
       {/* ユーザー詳細のモーダル */}
       <UserDetailModal
+        user={selectedUser}
         isOpen={isOpen}
         onClose={onClose}
       />
