@@ -7,6 +7,7 @@ import {
 } from "@chakra-ui/react";
 import { FC, memo, useCallback, useEffect } from "react";
 import { useAllUsers } from "../../hooks/useAllUsers";
+import { useLoginUser } from "../../hooks/useLoginUser";
 import { useSelectUser } from "../../hooks/useSelectUser";
 import { UserCard } from "../organisms/user/UserCard";
 import { UserDetailModal } from "../organisms/user/UserDetailModal";
@@ -18,6 +19,8 @@ export const UserManagement: FC = memo(() => {
   const { getUsers, loading, users } = useAllUsers();
   // 選択ユーザーと一致するユーザを取得する用のカスタムフックを実行
   const { onSelectUser, selectedUser } = useSelectUser();
+  // ログインユーザーをコンテキストから取得
+  const { loginUser } = useLoginUser();
 
   // 初回マウント時に getUsers を実行する
   useEffect(() => getUsers, []);
