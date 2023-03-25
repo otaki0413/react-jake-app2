@@ -7,9 +7,11 @@ import {
 } from "react";
 import { User } from "../types/api/user";
 
+type LoginUser = User & { isAdmin: boolean };
+
 export type LoginUserContextType = {
-  loginUser: User | undefined;
-  setLoginUser: Dispatch<SetStateAction<User | undefined>>;
+  loginUser: LoginUser | undefined;
+  setLoginUser: Dispatch<SetStateAction<LoginUser | undefined>>;
 };
 
 export const LoginUserContext = createContext<LoginUserContextType>(
@@ -19,7 +21,7 @@ export const LoginUserContext = createContext<LoginUserContextType>(
 // ログインユーザー情報を保持するcontext
 export const LoginUserProvider = (props: { children: ReactNode }) => {
   const { children } = props;
-  const [loginUser, setLoginUser] = useState<User | undefined>(undefined);
+  const [loginUser, setLoginUser] = useState<LoginUser | undefined>(undefined);
   return (
     <LoginUserContext.Provider value={{ loginUser, setLoginUser }}>
       {children}

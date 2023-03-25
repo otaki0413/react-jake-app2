@@ -21,8 +21,10 @@ export const useAuth = () => {
         .get<User>(`https://jsonplaceholder.typicode.com/users/${id}`)
         .then((res) => {
           if (res.data) {
+            // 管理者フラグの設定
+            const isAdmin = res.data.id === 10 ? true : false;
             // ログインユーザーをコンテキストに設定
-            setLoginUser(res.data);
+            setLoginUser({ ...res.data, isAdmin });
             showMessage({ title: "ログインしました", status: "success" });
             navigation("/home");
           } else {
