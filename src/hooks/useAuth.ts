@@ -23,7 +23,7 @@ export const useAuth = () => {
           if (res.data) {
             // 管理者フラグの設定
             const isAdmin = res.data.id === 10 ? true : false;
-            // ログインユーザーをコンテキストに設定
+            // ログインユーザーをコンテキストに設定、管理者情報も追加
             setLoginUser({ ...res.data, isAdmin });
             showMessage({ title: "ログインしました", status: "success" });
             navigation("/home");
