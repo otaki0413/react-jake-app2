@@ -21,8 +21,9 @@ export const UserManagement: FC = memo(() => {
   const { onSelectUser, selectedUser } = useSelectUser();
   // ログインユーザーをコンテキストから取得
   const { loginUser } = useLoginUser();
+  console.log(loginUser);
 
-  // 初回マウント時に getUsers を実行する
+  // 初回マウント時の処理
   useEffect(() => getUsers, []);
 
   // ユーザー選択時にモーダルを表示する関数
@@ -66,6 +67,7 @@ export const UserManagement: FC = memo(() => {
       <UserDetailModal
         user={selectedUser}
         isOpen={isOpen}
+        isAdmin={loginUser?.isAdmin}
         onClose={onClose}
       />
     </>
